@@ -1,5 +1,6 @@
 import scrapy
 import json
+import re
 
 
 class CarmudiSpider(scrapy.Spider):
@@ -26,19 +27,19 @@ class CarmudiSpider(scrapy.Spider):
         data["type"] = response.xpath("//*[@id=\"seller-details\"]/ul/li/text()").extract_first()
         data["address"] = response.xpath("//*[@id=\"addressBlock\"]/address/text()").extract_first()
         data["name"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[1]/span/text()").extract_first()
-        data["price"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[2]/div[1]/div/text()").extract_first()
-        data["millage"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[1]/span/text()").extract_first()
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[1]/span/text()").extract_first()
+        data["price"] = re.sub('[^0-9]','',response.xpath(
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[2]/div[1]/div/text()").extract_first())
+        data["millage"] = re.sub('[^0-9]','',response.xpath(
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[1]/span/text()").extract_first())
         data["transmission"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[2]/span/text()").extract_first()
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[2]/span/text()").extract_first()
         data["fuel"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[3]/span/text()").extract_first()
-        data["capacity"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[4]/span/text()").extract_first()
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[3]/span/text()").extract_first()
+        data["capacity"] = re.sub('[^0-9]','',response.xpath(
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[1]/div[4]/div/div[4]/span/text()").extract_first())
         data["description"] = response.xpath(
-            "/html/body/div[2]/main/div[1]/section[1]/section/div[2]/div[2]/div[2]/p/text()").extract_first()
+            "/html/body/div[1]/main/div[1]/section[1]/section/div[2]/div[2]/div[2]/p/text()").extract_first()
 
         for key, value in data.items():
             if value is not None:
